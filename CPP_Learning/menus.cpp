@@ -153,6 +153,7 @@ void menus::NextTurn() {
 		log.Print("It is " + name + "'s turn!");
 		std::string input = log.Get();
 		console.CheckInput(input);
+		log.Print(" Hello World");
 		
 	}
 	else {
