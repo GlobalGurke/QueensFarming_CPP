@@ -3,5 +3,5 @@
 class console : public menus 
 {
 public: 
-	void CheckInput(std::string input); 
+	
 };

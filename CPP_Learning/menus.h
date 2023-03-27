@@ -8,6 +8,8 @@ public:
 		m_MainMenu, m_Game, m_End
 	};
 private:
+	bool inTurn;
+
 	int m_currentMenu; 
 	int m_gameTurn; 
 	int m_playerAmount;
@@ -16,8 +18,9 @@ private:
 	int m_currentTurn; 
 	int m_seed; 
 	int m_spoilTimer;
-	
+	void TurnSequence(int playerID);
 public: 
+	void CheckInput(std::string input);
 	void ShowBarn(int playerID);
 	menus();
 	void SetMenu(int type); 

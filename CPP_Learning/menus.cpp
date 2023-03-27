@@ -8,7 +8,9 @@
 
 std::vector<player> playerData;
 player Player;
+
 menus::menus() {
+	inTurn = false;
 	m_currentMenu = -1;
 	m_playerAmount = 0;
 	m_startMoney = 0;
@@ -47,6 +49,25 @@ int trueInt(std::string string) {
 		return -1; 
 	}
 }
+////////////////////////////Player Commands//////////////////////////////////////
+
+void menus::CheckInput(std::string input) {
+	if (input.find("show barn")) {
+		ShowBarn(m_currentTurn);
+		
+	}
+
+
+	
+
+
+}
+
+
+
+
+/// /////////////////////////////////////////////////////////////////////////////
+
 void menus::ShowBarn(int playerID) {
 	// Barn (Spoils in t rounds) 
 	debug log; 
@@ -64,6 +85,22 @@ void menus::ShowBarn(int playerID) {
 	std::cout << "Sum:       " << playerData[playerID].GetCurrentVegAmount() << std::endl; 
 }
 	
+
+void menus::TurnSequence(int playerID) {
+	debug log; 
+	inTurn = true;
+	int turnCount = 0; 
+	while (inTurn && turnCount < 3) {
+		std::string input = log.Get();
+		if (input.find("end turn")) {
+			inTurn = false;
+			break;
+		} else 
+		CheckInput(input);
+		turnCount += 1;
+		
+	}
+}
 
 int menus::GetMenu() {
 	return m_currentMenu; 
@@ -147,21 +184,23 @@ void menus::NextTurn() {
 	debug log; 
 	console console; 
 	log.Print(" ");
-	m_currentTurn += 1; 
-	if (m_currentTurn < playerData.size()) {
-		std::string name = playerData[m_currentTurn].GetName();
-		log.Print("It is " + name + "'s turn!");
-		std::string input = log.Get();
-		console.CheckInput(input);
-		log.Print(" Hello World");
-		
-	}
-	else {
-		log.Info("current Turn is higher than playerData vector size");
-		log.Info("Beginning new Game Round, setting currentTurn = 0");
-		m_currentTurn = -1; 
-		m_gameTurn += 1; 
-		std::cout << m_currentTurn << " " << m_gameTurn << std::endl; 
+	if (m_currentTurn == -1) m_currentTurn += 1; 
 
+	if (m_currentTurn < playerData.size()) {
+		if (!inTurn) {
+			std::string name = playerData[m_currentTurn].GetName();
+			log.Print("It is " + name + "'s turn!");
+			// ==> Got Players Turn, beginning his TURN
+			log.Info("Beginning Turn of specific player");
+			TurnSequence(m_currentTurn);
+		}
+		else {
+			log.Info("current Turn is higher than playerData vector size");
+			log.Info("Beginning new Game Round, setting currentTurn = 0");
+			m_currentTurn = -1;
+			m_gameTurn += 1;
+			std::cout << m_currentTurn << " " << m_gameTurn << std::endl;
+
+		}
 	}
 }

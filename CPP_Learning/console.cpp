@@ -1,7 +1,3 @@
 #include "console.h"
+#include "debug.h"
 
-void console::CheckInput(std::string input) {
-	if (input == "show barn") {
-		
-	}
-}
