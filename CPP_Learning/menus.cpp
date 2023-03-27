@@ -52,15 +52,12 @@ int trueInt(std::string string) {
 ////////////////////////////Player Commands//////////////////////////////////////
 
 void menus::CheckInput(std::string input) {
-	if (input.find("show barn")) {
+	debug log;
+	log.Info("Hello World");
+	if (input == "show barn") {
+		log.Info("Found show barn!");
 		ShowBarn(m_currentTurn);
-		
 	}
-
-
-	
-
-
 }
 
 
@@ -88,18 +85,21 @@ void menus::ShowBarn(int playerID) {
 
 void menus::TurnSequence(int playerID) {
 	debug log; 
+	log.Info("Turn SECUENCE ");
 	inTurn = true;
 	int turnCount = 0; 
 	while (inTurn && turnCount < 3) {
-		std::string input = log.Get();
-		if (input.find("end turn")) {
+		std::string input;
+		std::getline(std::cin, input);
+		
+		if (input == "end turn") {
 			inTurn = false;
 			break;
 		} else 
 		CheckInput(input);
 		turnCount += 1;
-		
 	}
+	inTurn = false;
 }
 
 int menus::GetMenu() {
@@ -193,14 +193,15 @@ void menus::NextTurn() {
 			// ==> Got Players Turn, beginning his TURN
 			log.Info("Beginning Turn of specific player");
 			TurnSequence(m_currentTurn);
+			m_currentTurn += 1;
 		}
-		else {
-			log.Info("current Turn is higher than playerData vector size");
-			log.Info("Beginning new Game Round, setting currentTurn = 0");
-			m_currentTurn = -1;
-			m_gameTurn += 1;
-			std::cout << m_currentTurn << " " << m_gameTurn << std::endl;
+	}
+	else {
+		log.Info("current Turn is higher than playerData vector size");
+		log.Info("Beginning new Game Round, setting currentTurn = 0");
+		m_currentTurn = -1;
+		m_gameTurn += 1;
+		std::cout << m_currentTurn << " " << m_gameTurn << std::endl;
 
-		}
 	}
 }
