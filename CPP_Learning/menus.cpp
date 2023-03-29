@@ -23,6 +23,7 @@ menus::menus() {
 void g_AddGold(int amount) {
 	for (int i = 0; i < playerData.size(); i++) {
 		playerData[i].AddGold(amount); 
+		std::cout << "Adding Gold: " << amount << std::endl; 
 	}
 }
 void g_RemoveGold(int amount) {
@@ -53,10 +54,11 @@ int trueInt(std::string string) {
 
 void menus::CheckInput(std::string input) {
 	debug log;
-	log.Info("Hello World");
 	if (input == "show barn") {
-		log.Info("Found show barn!");
 		ShowBarn(m_currentTurn);
+	}
+	if (input == "show board") {
+		ShowBoard(m_currentTurn);
 	}
 }
 
@@ -65,24 +67,35 @@ void menus::CheckInput(std::string input) {
 
 /// /////////////////////////////////////////////////////////////////////////////
 
+void menus::ShowBoard(int playerID) {
+	debug log; 
+	log.Print(" ");
+}
+
 void menus::ShowBarn(int playerID) {
 	// Barn (Spoils in t rounds) 
 	debug log; 
+	log.Print(" ");
 	int spoilTimer = m_spoilTimer - m_gameTurn;
-	std::cout << "Barn (spoils in " << spoilTimer << " turns" << std::endl; 
+	std::cout << "Barn (spoils in " << spoilTimer << " turns)" << std::endl; 
 	int mushroom = playerData[playerID].GetVegOfType('M');
 	int tomato = playerData[playerID].GetVegOfType('T');
 	int salad = playerData[playerID].GetVegOfType('S');
 	int carrot = playerData[playerID].GetVegOfType('C');
+	// Sortierung nach Menge
+	
+	//////////
 	if (mushroom > 0) std::cout << "mushrooms:  " << mushroom << std::endl; 
 	if (tomato > 0) std::cout << "tomatoes:   " << tomato << std::endl;
 	if (carrot > 0) std::cout << "carrots:  " << carrot << std::endl;
 	if (salad > 0) std::cout << "salads:     " << salad << std::endl;
-	log.Print("-------------");
-	std::cout << "Sum:       " << playerData[playerID].GetCurrentVegAmount() << std::endl; 
+	if (mushroom + tomato + carrot + salad > 0) {
+		log.Print("-------------");
+		std::cout << "Sum:       " << mushroom + tomato + salad + carrot << std::endl;
+		std::cout << " " << std::endl;
+	}
+		std::cout << "Gold:      " << playerData[playerID].GetGold() << std::endl; 
 }
-	
-
 void menus::TurnSequence(int playerID) {
 	debug log; 
 	log.Info("Turn SECUENCE ");
@@ -90,6 +103,7 @@ void menus::TurnSequence(int playerID) {
 	int turnCount = 0; 
 	while (inTurn && turnCount < 3) {
 		std::string input;
+		std::cout << "> "; 
 		std::getline(std::cin, input);
 		
 		if (input == "end turn") {
@@ -140,13 +154,14 @@ int MainMenu_players() {
 	}
 	return pInt; 
 }
-int MainMenu_conditions() {
+void menus::MainMenu_conditions() {
 	debug log; 
 	log.Print("Conditions");
 	log.Print("With how much money should each player start?");
 	std::string startMoney = log.Get();
 	int sMoney = trueInt(startMoney);
 	if (sMoney == -1) { log.Print(" Please use Int value"); MainMenu_conditions(); }
+	
 	log.Print(" "); 
 	log.Print("With how much gold should the player win?");
 	std::string money = log.Get();
@@ -156,7 +171,9 @@ int MainMenu_conditions() {
 		log.Print("Wrong Win condition, start condition is higher than win condition!");
 		MainMenu_conditions(); 
 	}
-	return sMoney, winMoney;
+	m_startMoney = sMoney;
+	m_winCond = winMoney;
+	
 }
 
 void menus::MainMenu() {
@@ -171,10 +188,9 @@ void menus::MainMenu() {
 	AddNames(pInt);
 	int sMoney = 0;
 	int winMoney = 0; 
-	sMoney, winMoney = MainMenu_conditions(); 
-	m_startMoney = sMoney; 
-	m_winCond = winMoney; 
-	g_AddGold(sMoney); 
+	MainMenu_conditions(); 
+	std::cout << "start money " <<  m_startMoney << std::endl;
+	g_AddGold(m_startMoney);
 	log.Print("Please enter the seed to shuffle the seeds");
 	std::cout << ">"; 
 	std::cin >> m_seed; 
@@ -190,6 +206,7 @@ void menus::NextTurn() {
 		if (!inTurn) {
 			std::string name = playerData[m_currentTurn].GetName();
 			log.Print("It is " + name + "'s turn!");
+
 			// ==> Got Players Turn, beginning his TURN
 			log.Info("Beginning Turn of specific player");
 			TurnSequence(m_currentTurn);

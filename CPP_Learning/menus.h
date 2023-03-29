@@ -20,9 +20,11 @@ private:
 	int m_spoilTimer;
 	void TurnSequence(int playerID);
 public: 
+	menus();
 	void CheckInput(std::string input);
 	void ShowBarn(int playerID);
-	menus();
+	void ShowBoard(int playerID);
+	void MainMenu_conditions();
 	void SetMenu(int type); 
 	int GetMenu();
 	void AddNames(int value);

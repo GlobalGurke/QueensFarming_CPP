@@ -9,6 +9,15 @@ void player::SetName(std::string name) {
 	m_name = name; 
 }
 
+void player::AddVegOfType(char type, int amount) {
+	int lastAmount = GetCurrentVegAmount();
+	m_lastVeg = lastAmount;
+	if (type == 'C') m_storage[0] += amount; 
+	if (type == 'S') m_storage[1] += amount;
+	if (type == 'T') m_storage[2] += amount;
+	if (type == 'M') m_storage[3] += amount;
+}
+
 int player::GetGold() {
 	return m_gold; 
 }
@@ -17,8 +26,9 @@ std::string player::GetName() {
 	return m_name;
 }
 int player::GetCurrentVegAmount() {
+	int amount = 0;
 	for (int i = 0; i < 4; i++) {
-		int amount =+ m_storage[i]; 
+		amount += m_storage[i];
 		return amount; 
 	}
 }
